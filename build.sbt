@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
   "net.serenity-bdd" % "serenity-cucumber" % serenityVersion,
   "net.serenity-bdd" % "serenity-junit" % serenityVersion,
   "net.serenity-bdd" % "serenity-jira-plugin" % "4.1.9",
-  "org.scalatest" %% "scalatest" % "3.2.15",
+  "org.scalatest" %% "scalatest" % "3.2.18",
   "org.slf4j" % "slf4j-simple" % "2.0.13"
 )
 
