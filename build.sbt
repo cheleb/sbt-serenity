@@ -1,10 +1,8 @@
 sbtPlugin := true
 
-organization := "dev.cheleb.sbt-serenity"
+organization := "dev.cheleb"
 
-name := "SerenitySbtPlugin"
-
-version := "1.2.1-SNAPSHOT"
+name := "sb-serenity"
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 
@@ -24,3 +22,23 @@ libraryDependencies ++= Seq(
 )
 
 publishMavenStyle := false
+
+sonatypeCredentialHost := "s01.oss.sonatype.org"
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
+pgpPublicRing := file("/tmp/public.asc")
+pgpSecretRing := file("/tmp/secret.asc")
+pgpPassphrase := sys.env.get("PGP_PASSWORD").map(_.toArray)
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/cheleb/sbt-serenity/"),
+    "scm:git:git@github.com:cheleb/sbt-serenity.git"
+  )
+)
+developers := List(
+  Developer(
+    "cheleb",
+    "Olivier NOUGUIER",
+    "olivier.nouguier@gmail.com",
+    url("https://github.com/cheleb")
+  )
+)
