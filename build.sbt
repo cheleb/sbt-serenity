@@ -2,7 +2,7 @@ sbtPlugin := true
 
 organization := "dev.cheleb"
 
-name := "sb-serenity"
+name := "sbt-serenity"
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 
