@@ -21,8 +21,6 @@ libraryDependencies ++= Seq(
   "org.slf4j" % "slf4j-simple" % "2.0.13"
 )
 
-publishMavenStyle := false
-
 sonatypeCredentialHost := "s01.oss.sonatype.org"
 sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
 pgpPublicRing := file("/tmp/public.asc")
@@ -33,6 +31,10 @@ scmInfo := Some(
     url("https://github.com/cheleb/sbt-serenity/"),
     "scm:git:git@github.com:cheleb/sbt-serenity.git"
   )
+)
+homepage := Some(url("https://github.com/cheleb/sbt-serenity"))
+licenses := List(
+   "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 )
 developers := List(
   Developer(
