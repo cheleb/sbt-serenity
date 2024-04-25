@@ -8,6 +8,9 @@ import net.serenitybdd.plugins.sbt.SerenityCapabilities
 class SerenityTasks(projectKey: String, log: Logger, baseDirectory: File)
     extends SerenityCapabilities(projectKey) {
 
+  log.info("SerenityTasks created.")
+  log.info(configuration.getEnvironmentVariables().getProperty("jira.url"))
+
   def serenityReport = {
 
     System.setProperty(
@@ -26,24 +29,6 @@ class SerenityTasks(projectKey: String, log: Logger, baseDirectory: File)
     )
     log.info("generating Serenity report history.")
     generateHistory()
-  }
-
-  def clearHistory {
-    System.setProperty(
-      "project.build.directory",
-      baseDirectory.getAbsolutePath
-    )
-    log.info("cleaning serenity report history.")
-    clearHistoryFiles()
-  }
-
-  def clearReports {
-    System.setProperty(
-      "project.build.directory",
-      baseDirectory.getAbsolutePath
-    )
-    log.info("cleaning serenity report directory.")
-    clearReportFiles()
   }
 
 }

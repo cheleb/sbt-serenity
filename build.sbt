@@ -34,7 +34,7 @@ scmInfo := Some(
 )
 homepage := Some(url("https://github.com/cheleb/sbt-serenity"))
 licenses := List(
-   "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+  "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 )
 developers := List(
   Developer(
