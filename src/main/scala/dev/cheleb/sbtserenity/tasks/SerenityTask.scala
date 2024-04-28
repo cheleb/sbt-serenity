@@ -23,20 +23,19 @@ abstract class SerenityTask(projectKey: String) {
 
   lazy val serenityConfiguration = SerenityInfrastructure.getConfiguration()
 
-  def updateLayoutPaths(projectDirectory: File, projectBuildDirectory: File) = {
-    val projectBuildDirectoryPath = projectBuildDirectory.getAbsolutePath()
-    System.setProperty(
-      "project.build.directory",
-      projectBuildDirectoryPath
-    )
-    val configuration = SerenityInfrastructure.getConfiguration()
-    configuration
-      .getEnvironmentVariables()
-      .setProperty("project.build.directory", projectBuildDirectoryPath)
-    configuration.setProjectDirectory(projectDirectory.toPath())
-    configuration.setOutputDirectory(null)
+  lazy val outputDirectory = serenityConfiguration.getOutputDirectory()
 
-  }
+  lazy val historyDirectory = serenityConfiguration.getHistoryDirectory()
+  lazy val sourceDirectory = outputDirectory
+
+  def environmentVariables = SerenityInfrastructure.getEnvironmentVariables()
+
+  lazy val issueTrackerUrl = environmentVariables.getProperty("jira.url")
+  lazy val jiraUrl = environmentVariables.getProperty("jira.url")
+  lazy val jiraUsername = environmentVariables.getProperty("jira.username")
+  lazy val jiraPassword = environmentVariables.getProperty("jira.password")
+  lazy val jiraProject = environmentVariables.getProperty("jira.project")
+  lazy val tags = environmentVariables.getProperty("cucumber.options.tags")
 
   /*
   def environmentVariables = SerenityInfrastructure.getEnvironmentVariables()

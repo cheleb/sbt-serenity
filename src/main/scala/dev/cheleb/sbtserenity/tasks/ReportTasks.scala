@@ -7,45 +7,145 @@ import net.thucydides.core.reports.ExtendedReports
 import scala.collection.JavaConverters._
 import net.thucydides.model.reports.ResultChecker
 import java.nio.file.Files
+import java.nio.file.Path
+import java.util.Locale
+import net.thucydides.model.environment.SystemEnvironmentVariables
+import net.thucydides.model.ThucydidesSystemProperty
+import net.serenitybdd.core.{Serenity => JSerenity}
+import net.thucydides.model.domain.TestResult
+import net.thucydides.core.reports.html.HtmlAggregateStoryReporter
+import com.google.common.base.Splitter
+import sbt.internal.util.ManagedLogger
+import java.util.ServiceLoader
+import net.thucydides.core.reports.ExtendedReport
+import dev.cheleb.sbtserenity.SbtSerenityExtendedReports
 
 class ReportTasks(config: Configuration, projectKey: String)
     extends SerenityTask(projectKey) {
 
-  def getTestRoot(): Option[String] = None
-  def getRequirementsBaseDir(): Option[String] = None
+  val requirementsBaseDir = "src/test/resources"
 
-  def getReports(): List[String] = List("epic", "feature")
+  val ignoreFailedTests = false
 
   def serenity = Def.task {
-    updateLayoutPaths(baseDirectory.value, target.value)
-    val reportDirectory = (target.value / "serenity" / "reports").toPath
 
-    Files.createDirectories(reportDirectory)
+    val projectDirectory = baseDirectory.value
+    def info(msg: String) = streams.value.log.info(msg)
+    def warn(msg: String) = streams.value.log.warn(msg)
 
-    streams.value.log.info(
-      "Generating Additional Serenity Reports for ${getProjectKey().get()} to directory $reportDirectory"
-    )
-    System.setProperty("serenity.project.key", projectKey)
-    getTestRoot().foreach { root =>
-      System.setProperty("serenity.test.root", root)
-    }
-    getRequirementsBaseDir().foreach(dir =>
-      System.setProperty("serenity.test.requirements.basedir", dir)
-    )
-    val extendedReportTypes = getReports()
-    for (
-      report <- ExtendedReports.named(extendedReportTypes.toList.asJava).asScala
-    ) {
+    warn("Extended reports")
+    ServiceLoader
+      .load(classOf[ExtendedReport], getClass.getClassLoader())
+      .forEach(report => warn(report.getName()));
 
-      report.setSourceDirectory(reportDirectory)
-      report.setOutputDirectory(reportDirectory)
-      // URI reportPath = absolutePathOf(report.generateReport()).toUri()
-      // logger.lifecycle("  - ${report.description}: ${reportPath}")
-    }
+    prepareExecution(projectDirectory, target.value)
 
-    val resultChecker = new ResultChecker(reportDirectory.toFile())
-    resultChecker.checkTestResults()
-    ()
+    info(s"Generating Serenity reports for project: $projectKey")
+
+    info(s"Output directory: ${outputDirectory}")
+
+    val testResult = generateHtmlStoryReports(projectDirectory.toPath())
+    generateExtraReports(
+      projectDirectory,
+      "single-page-html,navigator",
+      streams.value.log
+    );
+//    generateCustomReports();
+    if (ignoreFailedTests) {
+      warn("Ignoring failed tests in the Serenity test suite")
+    } else
+      testResult match {
+        case TestResult.ERROR =>
+          warn(
+            "An error occurred in the Serenity tests"
+          )
+        case TestResult.FAILURE =>
+          warn(
+            "A failure occurred in the Serenity tests"
+          )
+        case TestResult.COMPROMISED =>
+          warn(
+            "There were compromised tests in the Serenity test suite"
+          )
+        case TestResult.SUCCESS =>
+          info(
+            "All tests in the Serenity test suite passed"
+          )
+        case unknown => warn(s"Unknown test result  $unknown")
+      }
   }
 
+  private def generateHtmlStoryReports(
+      projectDirectory: Path
+  ): TestResult = {
+
+    val reporter = new HtmlAggregateStoryReporter(projectKey)
+    reporter.setProjectDirectory(projectDirectory.toFile().getPath());
+    reporter.setSourceDirectory(sourceDirectory);
+    reporter.setOutputDirectory(outputDirectory);
+    reporter.setIssueTrackerUrl(issueTrackerUrl);
+    reporter.setJiraUrl(jiraUrl);
+    reporter.setJiraProject(jiraProject);
+    reporter.setJiraUsername(jiraUsername);
+    reporter.setJiraPassword(jiraPassword);
+    reporter.setTags(tags);
+    reporter.setGenerateTestOutcomeReports();
+    val outcomes =
+      reporter.generateReportsForTestResultsFrom(sourceDirectory);
+    return new ResultChecker(outputDirectory).checkTestResults(outcomes);
+  }
+
+  private def generateExtraReports(
+      projectDirectory: File,
+      reports: String,
+      log: ManagedLogger
+  ) =
+    if (reports.nonEmpty) {
+      val extendedReportTypes = Splitter.on(",").splitToList(reports);
+      log.info(
+        s"Generating extended reports: ${extendedReportTypes.asScala.mkString(", ")}"
+      )
+      SbtSerenityExtendedReports
+        .named(extendedReportTypes, log)
+        .foreach(report => {
+          report.setProjectDirectory(projectDirectory.getPath());
+          report.setSourceDirectory(sourceDirectory.toPath());
+          report.setOutputDirectory(outputDirectory.toPath());
+          val generatedReport = report.generateReport();
+          log.info(
+            s"Generated report: ${report.getDescription}  ${generatedReport.toUri()}"
+          )
+        })
+    }
+
+  private def prepareExecution(baseDirectory: File, target: File) = {
+//    updateLayoutPaths(baseDirectory, target)
+    configureEnvironmentVariables()
+
+  }
+
+  private def configureEnvironmentVariables() {
+
+    Locale.setDefault(Locale.ENGLISH)
+
+    // TODO override environment variables
+    updateSystemProperty(
+      ThucydidesSystemProperty.SERENITY_PROJECT_KEY.getPropertyName(),
+      projectKey
+    );
+    updateSystemProperty(
+      ThucydidesSystemProperty.SERENITY_TEST_REQUIREMENTS_BASEDIR.toString(),
+      requirementsBaseDir
+    );
+
+  }
+
+  private def getEnvironmentVariables() =
+    SystemEnvironmentVariables.currentEnvironmentVariables()
+
+  private def updateSystemProperty(propertyName: String, value: String) {
+
+    getEnvironmentVariables()
+      .setProperty(propertyName, value)
+  }
 }

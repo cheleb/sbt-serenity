@@ -13,8 +13,6 @@ class HistoryTasks(config: Configuration, projectKey: String)
 
   private val defaultHistoryDirectory = "history"
 
-  def historyDirectory = serenityConfiguration.getHistoryDirectory()
-
   def historyReports = Def.task {
 
     streams.value.log.info("Creating history reports")

@@ -1,7 +1,6 @@
 package dev.cheleb.sbtserenity
 
 import sbt._
-import dev.cheleb.sbtserenity.tasks.SerenityTasks
 
 object SerenityKeys {
 
@@ -10,7 +9,6 @@ object SerenityKeys {
 
   // Task keys
 
-  val serenityTasks = taskKey[SerenityTasks]("Serenity sbt tasks")
   val serenityReportTask = taskKey[Unit]("Serenity sbt report task")
   val clearReports =
     taskKey[Unit]("Serenity sbt task to delete report directory")

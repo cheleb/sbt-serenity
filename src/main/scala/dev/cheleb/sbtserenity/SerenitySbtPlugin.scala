@@ -4,7 +4,9 @@ import sbt.Keys._
 import sbt.Tests.Cleanup
 import sbt._
 import plugins._
-import dev.cheleb.sbtserenity.tasks.SerenityTasks
+import net.thucydides.core.reports.ExtendedReports
+import java.util.ServiceLoader
+import net.thucydides.core.reports.ExtendedReport
 
 object SerenitySbtPlugin extends AutoPlugin {
 
@@ -16,11 +18,6 @@ object SerenitySbtPlugin extends AutoPlugin {
   override def requires: AutoPlugin = JvmPlugin
 
   override lazy val projectSettings: Seq[Setting[_]] = Seq(
-    serenityTasks := new SerenityTasks(
-      projectKey,
-      streams.value.log,
-      baseDirectory.value
-    ),
     test := {
       (Serenity / serenityReportTask).dependsOn((Test / test).result).value
     },
@@ -44,9 +41,7 @@ object SerenitySbtPlugin extends AutoPlugin {
     }).evaluated,
     clean := {
       (Serenity / clearReports).dependsOn((clean).result).value
-    },
-    historyReports := serenityTasks.value.historyReports,
-    serenityReportTask := serenityTasks.value.serenityReport
+    }
   ) ++ mySettings
 
   lazy val mySettings = inConfig(Serenity)(
