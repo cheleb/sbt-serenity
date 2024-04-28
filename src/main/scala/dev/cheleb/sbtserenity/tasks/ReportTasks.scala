@@ -33,11 +33,6 @@ class ReportTasks(config: Configuration, projectKey: String)
     def info(msg: String) = streams.value.log.info(msg)
     def warn(msg: String) = streams.value.log.warn(msg)
 
-    warn("Extended reports")
-    ServiceLoader
-      .load(classOf[ExtendedReport], getClass.getClassLoader())
-      .forEach(report => warn(report.getName()));
-
     prepareExecution(projectDirectory, target.value)
 
     info(s"Generating Serenity reports for project: $projectKey")

@@ -31,11 +31,11 @@ object SbtSerenityExtendedReports {
       log: ManagedLogger
   ) {
 
-    val knownReports = extendedReports
-
     reportNames.forEach(reportName => {
-      if (!knownReports.contains(reportName)) {
-        log.warn("No report found on classpath with name " + reportName);
+      if (!extendedReports.map(_.getName()).contains(reportName)) {
+        log.warn(
+          "No report found on classpath with name " + reportName + " " + extendedReports
+        );
       }
     });
   }
