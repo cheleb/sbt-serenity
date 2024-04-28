@@ -8,9 +8,6 @@ import net.serenitybdd.plugins.sbt.SerenityCapabilities
 class SerenityTasks(projectKey: String, log: Logger, baseDirectory: File)
     extends SerenityCapabilities(projectKey) {
 
-  log.info("SerenityTasks created.")
-  log.info(configuration.getEnvironmentVariables().getProperty("jira.url"))
-
   def serenityReport = {
 
     System.setProperty(

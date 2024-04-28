@@ -26,9 +26,4 @@ class CleaningTasks(config: Configuration) {
 
   }
 
-  def clearHistory = Def.task {
-    streams.value.log.info("cleaning serenity report history.")
-//    clearHistoryFiles()
-  }
-
 }

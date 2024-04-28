@@ -22,13 +22,13 @@ object SerenitySbtPlugin extends AutoPlugin {
       baseDirectory.value
     ),
     test := {
-      serenityReportTask.dependsOn((Test / test).result).value
+      (Serenity / serenityReportTask).dependsOn((Test / test).result).value
     },
     testOnly := (Def.inputTaskDyn {
       import sbt.complete.Parsers.spaceDelimited
       val args = spaceDelimited("<args>").parsed
       Def.taskDyn {
-        serenityReportTask.dependsOn(
+        (Serenity / serenityReportTask).dependsOn(
           (Test / testOnly).toTask(" " + args.mkString(" ")).result
         )
       }
@@ -37,7 +37,7 @@ object SerenitySbtPlugin extends AutoPlugin {
       import sbt.complete.Parsers.spaceDelimited
       val args = spaceDelimited("<args>").parsed
       Def.taskDyn {
-        serenityReportTask.dependsOn(
+        (Serenity / serenityReportTask).dependsOn(
           (Test / testQuick).toTask(" " + args.mkString(" ")).result
         )
       }
@@ -50,7 +50,7 @@ object SerenitySbtPlugin extends AutoPlugin {
   ) ++ mySettings
 
   lazy val mySettings = inConfig(Serenity)(
-    SerenitySetttings.settings(Serenity)
+    SerenitySetttings.settings(Serenity, projectKey)
   )
 
 }
