@@ -16,7 +16,9 @@ libraryDependencies ++= Seq(
   "net.serenity-bdd" % "serenity-core" % serenityVersion,
   "net.serenity-bdd" % "serenity-cucumber" % serenityVersion,
   "net.serenity-bdd" % "serenity-junit" % serenityVersion,
-  "net.serenity-bdd" % "serenity-jira-plugin" % "4.1.10",
+//  "net.serenity-bdd" % "serenity-single-page-report" % serenityVersion,
+//  "net.serenity-bdd" % "serenity-navigator-report" % serenityVersion,
+  "net.serenity-bdd" % "serenity-jira-plugin" % serenityVersion,
   "org.scalatest" %% "scalatest" % "3.2.18",
   "org.slf4j" % "slf4j-simple" % "2.0.13"
 )
@@ -34,7 +36,7 @@ scmInfo := Some(
 )
 homepage := Some(url("https://github.com/cheleb/sbt-serenity"))
 licenses := List(
-   "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
+  "Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")
 )
 developers := List(
   Developer(
