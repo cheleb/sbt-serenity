@@ -30,7 +30,9 @@ val myProject = (project in file(".")).enablePlugins(SerenitySbtPlugin)
 
 ## Usage
 
-TDB
+The plugin will automatically generate the reports after the tests are run. The reports will be generated in `target/serenity`.
+
+See it in action in the [serenity-sbt-example](https://github.com/cheleb/hello-serenity-junit/)
 
 
 
