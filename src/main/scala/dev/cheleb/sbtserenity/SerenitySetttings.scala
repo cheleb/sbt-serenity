@@ -17,7 +17,7 @@ object SerenitySetttings {
     Seq(
       config / aggregateReports := aggregateTask.aggregate.value,
       config / clearReports := cleaningTasks.cleanReports.value,
-      config / serenityReportTask := reportTasks.serenity.value,
+      config / serenityReportTask := reportTasks.reports.value,
       config / historyReports := historyTasks.historyReports.value,
       config / clearHistory := historyTasks.clearHistory.value
     )

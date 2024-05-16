@@ -27,7 +27,7 @@ class ReportTasks(config: Configuration, projectKey: String)
 
   val ignoreFailedTests = false
 
-  def serenity = Def.task {
+  def reports = Def.task {
 
     val projectDirectory = baseDirectory.value
     def info(msg: String) = streams.value.log.info(msg)
@@ -40,6 +40,7 @@ class ReportTasks(config: Configuration, projectKey: String)
     info(s"Output directory: ${outputDirectory}")
 
     val testResult = generateHtmlStoryReports(projectDirectory.toPath())
+
     generateExtraReports(
       projectDirectory,
       "single-page-html,navigator",
