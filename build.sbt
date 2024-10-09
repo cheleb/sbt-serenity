@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
 //  "net.serenity-bdd" % "serenity-single-page-report" % serenityVersion,
 //  "net.serenity-bdd" % "serenity-navigator-report" % serenityVersion,
   "net.serenity-bdd" % "serenity-jira-plugin" % serenityVersion,
-  "org.scalatest" %% "scalatest" % "3.2.18",
+  "org.scalatest" %% "scalatest" % "3.2.19",
   "org.slf4j" % "slf4j-simple" % "2.0.13"
 )
 
