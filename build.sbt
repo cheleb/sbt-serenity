@@ -8,7 +8,7 @@ scalacOptions ++= Seq("-deprecation", "-feature")
 
 resolvers += Resolver.sonatypeRepo("snapshots")
 
-val serenityVersion = "4.2.32"
+val serenityVersion = "4.2.34"
 
 libraryDependencies ++= Seq(
 //  "junit" % "junit" % "4.11",
